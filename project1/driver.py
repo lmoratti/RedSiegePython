@@ -25,7 +25,6 @@ resource = sys.argv[3]
 #option for single IP passed in
 if isFile == "0":
 	queryIP(resource)
-	print("im here")
 
 #option for file with multiple IPs passed in
 if isFile == "1":
