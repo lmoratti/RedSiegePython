@@ -8,12 +8,17 @@ def checkHeader(response,header):
 		return True
 	print("    [FAIL]       NO '%s' Header Present" % (header))
 	return False
+
 def checkHost(response):
 	ip = response.raw._connection.sock.getpeername()[0]
-	print("    Hostname:%s"%response.url)
-	print("    IP:%s"%ip)
+	hostname = str(response.url)
+	print("    Hostname: %s"% hostname)
+	print("    IP: %s"%ip)
 	print("")
-	checkHeader(response,'Strict-Transport-Security')
+	if "https" in hostname:
+		checkHeader(response,'Strict-Transport-Security')
+	else:
+		print("    [FAIL]       Connected over HTTP,ignoring 'Strict-Transport-Security' check")
 	checkHeader(response,'Content-Security-Policy')
 	checkHeader(response,'X-Frame-Options')
 	checkHeader(response,'Server')
@@ -27,7 +32,7 @@ isFile = sys.argv[2] # 0 if cmd provided host, 1 if file with hosts
 if isFile == "0":
 	#we add stream = True to be able to grab the IP for Intermediate Task
 	response = requests.get(resource,stream=True)
-	checkSTS(response)
+	checkHost(response)
 
 if isFile =="1":
 	# Using readlines()
