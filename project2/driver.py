@@ -16,8 +16,6 @@ print("Usage: driver.py [Resource: URL of host OR filename] [isFile: expected 0 
 resource = sys.argv[1]
 isFile = sys.argv[2] # 0 if cmd provided host, 1 if file with hosts
 
-#make a web request to that host
-
 
 if isFile == "0":
 	#we add stream = True to be able to grab the IP for Intermediate Task
