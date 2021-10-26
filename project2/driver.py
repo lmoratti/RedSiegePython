@@ -1,18 +1,25 @@
 import requests
 import sys
 
-def checkSTS(response):
-	value = response.headers.get('Strict-Transport-Security')
-	
+def checkHeader(response,header):
+	value = response.headers.get(header)
 	if value != None:
-		print("[Pass]    " +response.url+ " has an STS Header")
-		print("    "+str(response.raw._connection.sock.getpeername()[0]))
+		print("    [Pass]   '%s'    %s" % (header,value))
 		return True
-	print("[Fail]    " +response.url + " has NO STS Header")
-	print("    "+str(response.raw._connection.sock.getpeername()[0]))
+	print("    [FAIL]       NO '%s' Header Present" % (header))
 	return False
+def checkHost(response):
+	ip = response.raw._connection.sock.getpeername()[0]
+	print("    Hostname:%s"%response.url)
+	print("    IP:%s"%ip)
+	print("")
+	checkHeader(response,'Strict-Transport-Security')
+	checkHeader(response,'Content-Security-Policy')
+	checkHeader(response,'X-Frame-Options')
+	checkHeader(response,'Server')
+
 #take commandline arguments
-print("Usage: driver.py [Resource: URL of host OR filename] [isFile: expected 0 or 1]")
+print("Usage: driver.py [Resource: URL of host OR filename] [isFile: expected 0 or 1]\n\n\n")
 resource = sys.argv[1]
 isFile = sys.argv[2] # 0 if cmd provided host, 1 if file with hosts
 
@@ -26,12 +33,15 @@ if isFile =="1":
 	# Using readlines()
 	file1 = open(resource, 'r')
 	lines = file1.readlines()
-	 
+	
+	print("Checking all hosts in %s for security headers" % resource)
 	for line in lines:
-		line= line.rstrip()
+		line= line.rstrip() #kept getting a '%0a' newline messing with my files
 		#we add stream = True to be able to grab the IP for Intermediate Task
 		response = requests.get(line,stream=True)
-		checkSTS(response)
+		checkHost(response)
+		print("\n")
+
 
 
 
