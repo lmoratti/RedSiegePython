@@ -1,4 +1,4 @@
-#Project 2 - Web Header Reporting
+# Project 2 - Web Header Reporting
 
 **Scenario:** Red Planet has assigned you to do a web app penetration test against a few target domains. There are a few findings that your team regularly report on, but aren't very fun to detect or write up. As such, you are looking to automate this portion of your test so that you can spend more time going for something more critical. 
 
